@@ -1,0 +1,22 @@
+{application, thumper,
+    [
+        {description, "RabbitMQ Helper Application"},
+        {vsn, "1.3"},
+        {registered, []},
+        {applications, [
+            kernel,
+            stdlib,
+            amqp_client,
+            ibrowse
+        ]},
+        {mod, {thumper_app, []}},
+        {env, [
+            {rabbitmq_config,
+                []
+            },
+            {broker_config,
+                []
+            }
+        ]}
+    ]
+}.

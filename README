@@ -1,0 +1,5 @@
+thumper
+=======
+
+Thumper is a wrapper around RabbitMQ client that helps the developer to manage
+connections to one or many RabbitMQ servers.

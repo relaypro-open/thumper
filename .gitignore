@@ -1,0 +1,9 @@
+*.beam
+*.o
+*.so
+.*.swp
+.eunit/*
+*.dump
+test/logs
+logs/
+_build
