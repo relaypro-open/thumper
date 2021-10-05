@@ -319,19 +319,19 @@ load_sub_rules() ->
 
 substitute_all([], String) ->
     String;
-substitute_all([{Var, MFA} | Rest], String) ->
-    case substitute(String, Var, MFA) of
+substitute_all([{Var, Sub} | Rest], String) ->
+    case substitute(String, Var, Sub) of
         {error, Error} ->
             {error, Error};
         NewValue ->
             substitute_all(Rest, NewValue)
     end.
 
-substitute(S, Var, MFA) ->
+substitute(S, Var, Sub) ->
     Pattern = iolist_to_binary(["{{(\\s)*",?Str(Var),"(\\s)*}}"]),
     case re:run(S, Pattern, [{capture, none}]) of
         match ->
-            case get_substitution_val(MFA) of
+            case get_substitution_val(Sub) of
                 {ok, Val} ->
                     re:replace(S, Pattern, Val, [{return, binary}, global]);
                 _ ->
@@ -349,7 +349,11 @@ get_substitution_val({M, F, A}) ->
             {error, E};
         Val ->
             {ok, Val}
-    end.
+    end;
+get_substitution_val(X) when is_binary(X) ->
+    {ok, X};
+get_substitution_val(X) when is_list(X) ->
+    {ok, X}.
 
 basic_get(Channel, QueueName) ->
     case amqp_channel:call(Channel, #'basic.get'{queue=QueueName}) of
