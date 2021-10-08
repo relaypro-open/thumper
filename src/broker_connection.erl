@@ -306,9 +306,9 @@ init_new_connection(Name, Network) ->
             ?THUMP(error, "error during init_connection: ~p", [ConnError]),
             {error, ConnError}
     catch
-        X:Y ->
+        X:Y:ST ->
             ?THUMP(error, "exception during init_connection: ~p ~p", [X, Y]),
-            ?THUMP(error, "~p", [erlang:get_stacktrace()]),
+            ?THUMP(error, "~p", [ST]),
             {error, {X, Y}}
     end.
 

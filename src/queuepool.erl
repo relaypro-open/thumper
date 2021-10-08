@@ -262,7 +262,6 @@ publisher_make_route_to_binding(Publisher, Id, Binding, Message, Exchange, Routi
             Res
         catch _:_ ->
             ?THUMP(error, "caught exception calling make_route_to_binding ~p", [Id]),
-            ?THUMP(error, "~p", [erlang:get_stacktrace()]),
             {error, exception}
     end.
 
@@ -272,7 +271,6 @@ publisher_publish_to_binding(Publisher, Id, Binding, Message, Exchange, RoutingK
             Res
         catch _:_ ->
             ?THUMP(error, "caught exception calling publish_to_binding ~p", [Id]),
-            ?THUMP(error, "~p", [erlang:get_stacktrace()]),
             {error, exception}
     end.
 %% --------------------------------------------------------------

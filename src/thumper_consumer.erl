@@ -75,8 +75,8 @@ handle_cast({thumper_svr, Pid}, St=#{broker := Broker, queue := Queue, consume_a
                     ?THUMP(error, "unexpected subscribe result ~p for queue ~p on broker ~p", [R, Queue, Broker]),
                     spawn(fun() -> timer:sleep(?ThumperWait), thumper_loop(Self, Broker) end),
                     {noreply, St#{thumper_svr_mon => undefined}, Timeout}
-                catch _:_ ->
-                    ?THUMP(error, "caught exception subscribing ~p", [erlang:get_stacktrace()]),
+                catch _:_:ST ->
+                    ?THUMP(error, "caught exception subscribing ~p", [ST]),
                     spawn(fun() -> timer:sleep(?ThumperWait), thumper_loop(Self, Broker) end),
                     {noreply, St#{thumper_svr_mon => undefined}, Timeout}
             end;

@@ -82,15 +82,6 @@ publish_to(ConfigName, Message, ExchangeName, RoutingKey, MessageOptions) ->
     Request = {publish, Message, ExchangeName, RoutingKey, MessageOptions},
     broker_call(ConfigName, Request).
 
-normalize_message_options(Boolean) when is_boolean(Boolean) ->
-    %% Backward compatibility
-    ?THUMP(debug, "please change your calls to thumper:publish and thumper:publish_to to use the proplist message options [{mandatory, boolean()}]", []),
-    [{mandatory, Boolean}];
-normalize_message_options(Opts) when is_list(Opts) ->
-    Opts;
-normalize_message_options(_) ->
-    [].
-
 cast_publish_to(ConfigName, Message, ExchangeName, RoutingKey) ->
     Request = {publish, Message, ExchangeName, RoutingKey, []},
     broker_cast(ConfigName, Request).
@@ -621,16 +612,14 @@ handle_info({_BasicReturn=#'basic.return'{reply_text=ReplyText, exchange=X, rout
             spawn(fun() ->
                 try Callback({X, RK, ReplyText}, Content) 
                 catch A:B ->
-                    ?THUMP(error, "return callback exception from X ~p, RK ~p, ~p:~p", [X, RK, A, B]),
-                    ?THUMP(error, "~p", [erlang:get_stacktrace()])
+                    ?THUMP(error, "return callback exception from X ~p, RK ~p, ~p:~p", [X, RK, A, B])
                 end
             end);
         {value, {M,F,A}} ->
             spawn(fun() ->
                 try apply(M, F, A ++ [{X, RK, ReplyText}, Content])
                 catch A:B ->
-                    ?THUMP(error, "return callback exception from X ~p, RK ~p, ~p:~p, ~p:~p", [X, RK, M, F, A, B]),
-                    ?THUMP(error, "~p", [erlang:get_stacktrace()])
+                    ?THUMP(error, "return callback exception from X ~p, RK ~p, ~p:~p, ~p:~p", [X, RK, M, F, A, B])
                 end
             end)
     end,
@@ -1183,7 +1172,7 @@ do_unsubscribe(#subscriber{pid=SubscriberPid, channel=Channel, consumer_tag=Cons
                     Error
             catch
                 X:Y ->
-                    ?THUMP(error, "basic.cancel exception for channel ~p : ~p ~p : backtrace ~p", [Channel, X, Y, erlang:get_stacktrace()]),
+                    ?THUMP(error, "basic.cancel exception for channel ~p : ~p ~p", [Channel, X, Y]),
                     {error, {X, Y}}
             end,
             try amqp_channel:close(Channel)
@@ -1435,7 +1424,7 @@ basic_recover(Channel, Requeue) ->
             Error
     catch
         X:Y ->
-            ?THUMP(error, "basic.recover exception for channel ~p : ~p ~p : backtrace ~p", [Channel, X, Y, erlang:get_stacktrace()]),
+            ?THUMP(error, "basic.recover exception for channel ~p : ~p ~p", [Channel, X, Y]),
             {error, {X, Y}}
     end.
 
