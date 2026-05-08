@@ -1,6 +1,6 @@
 [{<<"amqp_client">>,
-  {git,"https://github.com/jbrisbin/amqp_client.git",
-       {ref,"d50aec00b94f0766a048b4eceaf25ddfdeeb1d86"}},
+  {git,"https://github.com/relaypro-open/amqp_client.git",
+       {ref,"89059c244bab44d0575ebdb3601df2fae860f5c3"}},
   0},
  {<<"erlexec">>,
   {git,"https://github.com/saleyn/erlexec.git",
